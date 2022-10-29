@@ -78,7 +78,7 @@ class navBar extends HTMLElement {
                           </svg>
                       </div>
                       <div class="col">
-                          All over the shop | United Kingdom
+                          Various Locations | United Kingdom
                       </div>
                   </div>
 
