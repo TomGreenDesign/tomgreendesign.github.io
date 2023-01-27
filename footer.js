@@ -5,11 +5,12 @@ class footer extends HTMLElement {
   
     connectedCallback() {
       this.innerHTML = `
-      
+
       <hr />
       <section class="text-center">
-      <p>© Tom Green 2022</p>
+      <p>© Tom Green 2023</p>
       </section>
+
 
       `;
     }
