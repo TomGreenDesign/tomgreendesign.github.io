@@ -123,8 +123,10 @@
 								Because the measured data is quantised, we substitute a bilinear transform into the
 								laplace variable \(s\) in the transfer function:
 								$$ s=({2 \over T} {z-1 \over z+1})$$
+
 								Such that
-								$$ C_{pid(z)} = K+{KT(z+1) \over T_i (z-1)}+ {2K(z-1) \over T(z+1)}. $$
+
+								$$ C_{pid(z)} = K+{KT(z+1) \over 2T_i (z-1)}+ {2K(z-1) \over T(z+1)}. $$
 
 								By rearranging for a common denominator,
 								$$ C_{pid(z)} = {{2KTT_i(z+1)(z-1) + KT^2(z+1)^2+4KT_iT_d(z-1)^2} \over
@@ -132,8 +134,8 @@
 
 								And by normalising for \(z^2\) in the denominator,
 
-								$$ C_{pid(z)} = { { {K \over TT_i} TT_i(z+1)(z-1) + KT^2(z+1)^2 + 4KT_iT_d (z-1)^2}
-								\over {z^2 -1} } $$
+								$$ C_{pid(z)} = { { {K \over TT_i} [ TT_i(z+1)(z-1) + KT^2(z+1)^2 + 4KT_iT_d (z-1)^2}]
+								\over {z^2 -1}} $$
 
 								Which is then expanded to
 
@@ -168,6 +170,16 @@
 								$$ Y(n) = (K + {KT \over T_i} + {4KT_d \over T})X(n) + ({2KT \over T_i} - {4KT_d \over
 								T})X(n-1) +$$
 								$$ ({KT \over T_i} + {4KT_d \over T} - K)X(n-2) + Y(n-2) $$
+
+								We may then define coefficients \(a_0\), \(a_1\), \(a_2\) and \(b_0\) as:
+
+								$$ a_2 = K + {KT \over T_i} + {4KT_d \over T} $$
+
+								$$ a_1 = {2KT \over T_i} - {4KT_d \over T} $$
+
+								$$ a_0 = {KT \over T_i} + {4KT_d \over T} - K $$
+
+								$$ b_0 = 1 $$
 
 							</p>
 
@@ -240,7 +252,7 @@
 		document.getElementById("showPeriod").style.visibility="visible";
 		
 		//Calculate & show a0 coefficient
-		a0 = K + (K*T/Ti) + (4*K*Td/T);
+		a2 = K + (K*T/Ti) + (4*K*Td/T);
 		document.getElementById("a0").textContent="\\(a_0 = " + a0 + "\\)";
 		document.getElementById("a0").style.visibility="visible";
 		
@@ -250,7 +262,7 @@
 		document.getElementById("a1").style.visibility="visible";
 
 		//Calculate and show a1 coefficient
-		a2 = (K*T/Ti) + (4*K*Td/T) - K;
+		a0 = (K*T/Ti) + (4*K*Td/T) - K;
 		document.getElementById("a2").textContent="\\(a_2 = " + a2 + "\\)";
 		document.getElementById("a2").style.visibility="visible";
 
