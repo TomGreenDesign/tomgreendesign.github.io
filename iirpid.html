@@ -146,8 +146,8 @@
 								now cross-multiply to find the output amplitude \(Y(z)\) for a given input amplitude
 								\(X(z)\) in the \(z\) domain.
 
-								$$ z^2Y(z) = (K + {KT \over T_i} + 4KT_d \ over T)z^2X(z) + ({2KT \over T_i} - {4KT_d
-								\over T})zX(z)$$
+								$$ z^2Y(z) = {(K + {KT \over T_i} + 4KT_d \over T)z^2X(z) + ({2KT \over T_i} - {4KT_d
+								\over T})zX(z)}$$
 								$$ + ({KT \over T_i} + {4KT_d \over T} -K)X(z) + Y(z) $$
 
 								In the bilinear transform, each power of \(z\) represents a unit time delay of period
@@ -225,7 +225,7 @@
 		Td = Number(document.getElementById("inputDerivGain").value);
 		Fs = Number(document.getElementById("inputFreq").value);
 
-		if(K <= 0 || Ti <= 0 || Td <= 0 || Fs <= 0){
+		if(K < 0 || Ti < 0 || Td < 0 || Fs <= 0){
 			window.alert("Invalid input!");
 			return;
 		}
