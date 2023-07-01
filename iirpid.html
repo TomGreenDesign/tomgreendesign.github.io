@@ -35,6 +35,11 @@
 	<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
 	<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 
+	<!-- Import PrismJS -->
+	<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"></script>
+	<link href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism.min.css" rel="stylesheet"></link>
+
+
 </head>
 
 <body class="d-flex flex-column min-vh-100">
@@ -126,7 +131,7 @@
 
 								Such that
 
-								$$ C_{pid(z)} = K+{KT(z+1) \over 2T_i (z-1)}+ {2K(z-1) \over T(z+1)}. $$
+								$$ C_{pid(z)} = K+{KT(z+1) \over 2T_i (z-1)}+ {2KT_d(z-1) \over T(z+1)}. $$
 
 								By rearranging for a common denominator,
 								$$ C_{pid(z)} = {{2KTT_i(z+1)(z-1) + KT^2(z+1)^2+4KT_iT_d(z-1)^2} \over
@@ -134,13 +139,13 @@
 
 								And by normalising for \(z^2\) in the denominator,
 
-								$$ C_{pid(z)} = { { {K \over TT_i} [ TT_i(z+1)(z-1) + KT^2(z+1)^2 + 4KT_iT_d (z-1)^2}]
+								$$ C_{pid(z)} = { { {K \over 2TT_i} [ 2TT_i(z+1)(z-1) + KT^2(z+1)^2 + 4KT_iT_d (z-1)^2}]
 								\over {z^2 -1}} $$
 
 								Which is then expanded to
 
-								$$ C_{pid(z)} = { { (K+{KT \over T_i} + {4KT_d \over T})z^2 + ({2KT \over T_i}-{4KT_d
-								\over T })z + ( {KT \over T_i} + {4KT_d \over T} - K) } \over {z^2-1} } = {Y(z) \over
+								$$ C_{pid(z)} = { { (K+{KT \over T_i} + {2KT_d \over T})z^2 + ({KT \over T_i}-{4KT_d
+								\over T })z + ( {KT \over 2T_i} + {2KT_d \over T} - K) } \over {z^2-1} } = {Y(z) \over
 								X(z)} $$
 
 								\(X(z)\) and \(Y(z)\) in the equation above are the inputs and outputs to the system,
@@ -148,17 +153,17 @@
 								now cross-multiply to find the output amplitude \(Y(z)\) for a given input amplitude
 								\(X(z)\) in the \(z\) domain.
 
-								$$ z^2Y(z) = {(K + {KT \over T_i} + 4KT_d \over T)z^2X(z) + ({2KT \over T_i} - {4KT_d
+								$$ z^2Y(z) = {(K + {KT \over T_i} + {2KT_d \over T})z^2X(z) + ({KT \over T_i} - {4KT_d
 								\over T})zX(z)}$$
-								$$ + ({KT \over T_i} + {4KT_d \over T} -K)X(z) + Y(z) $$
+								$$ + ({KT \over 2T_i} + {2KT_d \over T} -K)X(z) + Y(z) $$
 
 								In the bilinear transform, each power of \(z\) represents a unit time delay of period
 								\(T\), and as such we can convert these orders of \(z\) into array indices of sampled
 								data, since these samples are taken at a fixed sampling rate \(F_s\).
 
-								$$ Y(n+2) = (K+{KT \over T_i} + {4KT_d \over T})X(n+2) + ({2KT \over T_i } - {4KT_d
+								$$ Y(n+2) = (K+{KT \over T_i} + {2KT_d \over T})X(n+2) + ({KT \over T_i } - {4KT_d
 								\over T})X(n+1) + $$
-								$$({KT \over T_i} + {4KT_d \over T} - K)X(n) + Y(n) $$
+								$$({KT \over 2T_i} + {2KT_d \over T} - K)X(n) + Y(n) $$
 
 								Where \(Y\) is an array of output data and \(X\) the array of input samples. The above
 								equation calculates the output two samples in the future; this is not helpful to us,
@@ -167,17 +172,17 @@
 								however, that the first two sample will be calculated with the wrong value of \(Y(n)\)
 								and that this error with propagate through the first several cycles of the function.
 
-								$$ Y(n) = (K + {KT \over T_i} + {4KT_d \over T})X(n) + ({2KT \over T_i} - {4KT_d \over
+								$$ Y(n) = (K + {KT \over T_i} + {2KT_d \over T})X(n) + ({KT \over T_i} - {4KT_d \over
 								T})X(n-1) +$$
-								$$ ({KT \over T_i} + {4KT_d \over T} - K)X(n-2) + Y(n-2) $$
+								$$ ({KT \over 2T_i} + {2KT_d \over T} - K)X(n-2) + Y(n-2) $$
 
 								We may then define coefficients \(a_0\), \(a_1\), \(a_2\) and \(b_0\) as:
 
-								$$ a_2 = K + {KT \over T_i} + {4KT_d \over T} $$
+								$$ a_2 = K + {KT \over T_i} + {2KT_d \over T} $$
 
-								$$ a_1 = {2KT \over T_i} - {4KT_d \over T} $$
+								$$ a_1 = {KT \over T_i} - {4KT_d \over T} $$
 
-								$$ a_0 = {KT \over T_i} + {4KT_d \over T} - K $$
+								$$ a_0 = {KT \over 2T_i} + {2KT_d \over T} - K $$
 
 								$$ b_0 = 1 $$
 
@@ -191,19 +196,16 @@
 						<div class="h-100  hover-shadow">
 							<h3 class>Numerical Solution</h3>
 
-								<p id="textprompt" class="text-italic"><em>Enter values above and click Calculate to see a numerical solution</em></p> 
-								<p id="showPeriod" style="visibility:hidden">$$T = {1 \over F_s} $$</p>
-								<p id="a0" style="visibility:hidden">a0 coefficient</p>
-								<p id="a1" style="visibility:hidden">a1 coefficient</p>
-								<p id="a2" style="visibility:hidden">a2 coefficient</p>
-								<p id="b0" style="visibility:hidden">b0 coefficient</p>
+							<p id="textprompt" class="text-italic"><em>Enter values above and click Calculate to see a
+									numerical solution</em></p>
+							<p id="showPeriod" style="visibility:hidden">$$T = {1 \over F_s} $$</p>
+							<p id="a0" style="visibility:hidden">a0 coefficient</p>
+							<p id="a1" style="visibility:hidden">a1 coefficient</p>
+							<p id="a2" style="visibility:hidden">a2 coefficient</p>
+							<p id="b0" style="visibility:hidden">b0 coefficient</p>
 
 						</div>
 					</div>
-
-
-
-
 				</div>
 			</div>
 
@@ -211,7 +213,40 @@
 
 
 
-
+		<section class="container">
+			<h3>Code Implementation</h3>
+			<pre>
+				<code class="language-clike">
+					//Define input & output history
+					//Note that x0 is not needed since it will be the current input to the function.
+					double x1, x2, y0, y1, y2;
+					<div id="coefficients">
+					//Define IIR coefficients
+					double a0, a1, a2, b0, b1, b2;
+					</div>
+					function iir(x) = {
+	
+						//IIR calculation
+						y = a0 * x +
+						a1 * x1 +
+						a2 * x2 +
+						b0 * y0 +
+						b1 * y1 +
+						b2 * y2;
+				
+						//Update history
+						x2 = x1;
+						x1 = x;
+						y2 = y1;
+						y1 = y0;
+						y0 = y;
+				
+						//Return value
+						return x;
+					}
+				</code>
+			</pre>
+		</section>
 
 
 
@@ -237,40 +272,40 @@
 		Td = Number(document.getElementById("inputDerivGain").value);
 		Fs = Number(document.getElementById("inputFreq").value);
 
-		if(K < 0 || Ti < 0 || Td < 0 || Fs <= 0){
+		if (K < 0 || Ti < 0 || Td < 0 || Fs <= 0) {
 			window.alert("Invalid input!");
 			return;
 		}
 
-		T = Math.round(1/Fs * 1e8)/1e8;
+		T = Math.round(1 / Fs * 1e8) / 1e8;
 
 		//Hide prompt text to enter values
-		document.getElementById("textprompt").style.visibility="hidden";
+		document.getElementById("textprompt").style.visibility = "hidden";
 
 		//Render time period equation
-		document.getElementById("showPeriod").textContent="\\(T = {1 \\over " + Fs + "} = " + T + "\\)s";
-		document.getElementById("showPeriod").style.visibility="visible";
-		
+		document.getElementById("showPeriod").textContent = "\\(T = {1 \\over " + Fs + "} = " + T + "\\)s";
+		document.getElementById("showPeriod").style.visibility = "visible";
+
 		//Calculate & show a0 coefficient
-		a2 = K + (K*T/Ti) + (4*K*Td/T);
-		document.getElementById("a0").textContent="\\(a_0 = " + a0 + "\\)";
-		document.getElementById("a0").style.visibility="visible";
-		
-		//Calculate and show a1 coefficient
-		a1 = (2*K*T/Ti) - (4*K*Td / T);
-		document.getElementById("a1").textContent="\\(a_1 = " + a1 + "\\)";
-		document.getElementById("a1").style.visibility="visible";
+		a2 = K + (K * T / Ti) + (2 * K * Td / T);
+		document.getElementById("a0").textContent = "\\(a_0 = " + a0 + "\\)";
+		document.getElementById("a0").style.visibility = "visible";
 
 		//Calculate and show a1 coefficient
-		a0 = (K*T/Ti) + (4*K*Td/T) - K;
-		document.getElementById("a2").textContent="\\(a_2 = " + a2 + "\\)";
-		document.getElementById("a2").style.visibility="visible";
+		a1 = (K * T / Ti) - (4 * K * Td / T);
+		document.getElementById("a1").textContent = "\\(a_1 = " + a1 + "\\)";
+		document.getElementById("a1").style.visibility = "visible";
+
+		//Calculate and show a1 coefficient
+		a0 = (K * T / (2* Ti)) + (2 * K * Td / T) - K;
+		document.getElementById("a2").textContent = "\\(a_2 = " + a2 + "\\)";
+		document.getElementById("a2").style.visibility = "visible";
 
 		//Show b0 coefficient
 		b0 = 1;
-		document.getElementById("b0").textContent="\\(b_0 = " + b0 + "\\)";
-		document.getElementById("b0").style.visibility="visible";
-		
+		document.getElementById("b0").textContent = "\\(b_0 = " + b0 + "\\)";
+		document.getElementById("b0").style.visibility = "visible";
+
 
 		//Re-render math
 		MathJax.typeset();
