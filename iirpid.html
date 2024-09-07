@@ -37,8 +37,11 @@
 
 	<!-- Import PrismJS -->
 	<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"></script>
-	<link href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism.min.css" rel="stylesheet"></link>
+	<link href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism.min.css" rel="stylesheet">
+	</link>
 
+	<!-- Load custom CSS overrides-->
+	<link rel="stylesheet" href="overrides.css">
 
 </head>
 
@@ -53,8 +56,13 @@
 		</div>
 		<p class="fst-italic pb-4">This tool is designed to aid in the design of IIR filters to implement PID control on
 			discrete data as measured from real-world systems.</p>
-		<div class="container">
 
+		<div class="alert alert-danger alert-dismissable fade show" role="alert">
+			<strong>NOTE: THIS TOOL HAS NOT BEEN VERIFIED AND LIKELY CONTAINS ERRORS!</strong>
+			</button>
+		</div>
+
+		<div class="container">
 			<!-- Proportional Gain Input -->
 			<div class="row">
 				<div class="col-md-3">
@@ -116,7 +124,7 @@
 					<div class="col">
 						<div class="h-100 hover-shadow">
 
-							<h3 class="">Alebraic Solution</h3>
+							<h3 class="">Alebraic Derivation</h3>
 
 							<p> The function of a PID controller can be described in the time-continuous Laplace domain
 								by the following transfer function:
@@ -214,7 +222,7 @@
 
 
 		<section class="container">
-			<h3>Code Implementation</h3>
+			<h3>Pseudocode Implementation</h3>
 			<pre>
 				<code class="language-clike">
 					//Define input & output history
@@ -297,7 +305,7 @@
 		document.getElementById("a1").style.visibility = "visible";
 
 		//Calculate and show a1 coefficient
-		a0 = (K * T / (2* Ti)) + (2 * K * Td / T) - K;
+		a0 = (K * T / (2 * Ti)) + (2 * K * Td / T) - K;
 		document.getElementById("a2").textContent = "\\(a_2 = " + a2 + "\\)";
 		document.getElementById("a2").style.visibility = "visible";
 
